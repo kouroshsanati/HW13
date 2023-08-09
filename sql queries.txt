@@ -1,0 +1,76 @@
+use database shoppingcenter;
+
+CREATE TABLE branches(id int AUTO_INCREMENT PRIMARY KEY,
+name varchar(255) not null,
+establish_date date,
+city varchar(255) not null );
+
+CREATE TABLE departments(id int not null AUTO_INCREMENT,
+name varchar(255) not null,
+description varchar(255)not null,
+branch_id int not null,
+PRIMARY KEY (id),
+FOREIGN KEY (branch_id) REFERENCES branches(id));
+
+
+CREATE TABLE employee (id int NOT null AUTO_INCREMENT PRIMARY KEY ,
+ name varchar(255) not null,
+age int not null,
+salary int not null,
+department_id int NOT null ,
+FOREIGN KEY (department_id) REFERENCES departments(id));
+
+
+
+FOR TABLE BRANCHES 
+INSERT INTO `branches` (`id`, `name`, `establish_date`, `city`) VALUES (NULL, 'امام خمینی', '1390/10/10', 'اصفهان '), (NULL, 'تهرانپارس', '1370/1/1', 'تهران'), (NULL, 'لار', '1365/1/1', 'شیراز');
+
+for table departments
+INSERT INTO `departments` (`id`, `name`, `description`, `branch_id`) VALUES (NULL, 'tasisat', 'this is for rapairing ', '1'), (NULL, 'security', 'this is for keep safe', '1'), (NULL, 'management', 'this is for manage company', '1');
+
+INSERT INTO `departments` (`id`, `name`, `description`, `branch_id`) VALUES (NULL, 'tasisat', 'this is for rapairing', '2'), (NULL, 'security', 'this is for keep safe', '2'), (NULL, 'managemnt', 'this is for manage company', '2');
+
+INSERT INTO `departments` (`id`, `name`, `description`, `branch_id`) VALUES (NULL, 'tasisat', 'this is for rapairing', '3'), (NULL, 'security', 'this is for keep safe', '3'), (NULL, 'management', 'this is for manage company', '3');
+
+
+for table employee
+INSERT INTO `employee` (`id`, `name`, `age`, `salary`, `department_id`) VALUES (NULL, 'saeed', '25', '1100', '1'), (NULL, 'majid', '27', '500', '1'), (NULL, 'mohsen', '30', '2000', '8');
+INSERT INTO `employee` (`id`, `name`, `age`, `salary`, `department_id`) VALUES (NULL, 'hasan', '40', '8000', '6'), (NULL, 'asghar', '60', '800', '6'), (NULL, 'mohammad', '44', '7000', '8'), (NULL, 'zahara', '18', '900', '6'), (NULL, 'reza', '30', '2500', '9'), (NULL, 'mostafa', '33', '2000', '8');
+
+
+answer 1 
+SELECT * FROM employee WHERE salary < 1000
+answer 2
+SELECT e.name,d.name FROM employee e JOIN departments d ON  d.id = e.department_id 
+ and also 
+SELECT e.name as 'employee name',d.name  as 'department name'FROM employee e JOIN departments d ON  d.id = e.department_id 
+answer 3
+SELECT AVG(salary) from employee GROUP BY department_id
+answer 4
+SELECT * from departments JOIN branches on departments.branch_id = branches.id WHERE branches.city = 'اصفهان'
+SELECT departments.name from departments JOIN branches on departments.branch_id = branches.id WHERE branches.city = 'اصفهان'
+ansewer 5
+SELECT branches.name,COUNT(departments.id) from branches JOIN departments on departments.branch_id = branches.id GROUP by branches.name
+answer 6 
+SELECT employee.name, branches.name
+FROM branches
+JOIN departments ON branches.id = departments.branch_id
+JOIN employee on departments.id = employee.department_id
+
+SELECT employee.name,branches.name FROM employee JOIN departments on employee.department_id = departments.id JOIN branches on departments.branch_id = branches.id 
+
+asnwer 7
+SELECT AVG(employee.salary) FROM employee JOIN departments on employee.department_id = departments.id JOIN branches on departments.branch_id = branches.id WHERE branches.city = 'اصفهان' GROUP BY branches.id 
+answer 7 
+SELECT AVG(employee.salary) FROM employee JOIN departments on employee.department_id = departments.id JOIN branches on departments.branch_id = branches.id WHERE branches.city = 'اصفهان' GROUP BY branches.id 
+
+answer 8
+SELECT branches.name,COUNT(employee.id) FROM branches JOIN departments on branches.id = departments.branch_id JOIN employee on employee.department_id = departments.id GROUP BY branches.id
+
+naswer 9 
+SELECT departments.name,COUNT(employee.id) from employee RIGHT JOIN departments on employee.department_id = departments.id LEFT JOIN branches on departments.branch_id = branches.id where branches.city = 'اصفهان' GROUP BY departments.id;
+
+answer 10 
+SELECT branches.name from employee  JOIN departments on 
+employee.department_id = departments.id JOIN branches 
+on departments.branch_id = branches.id GROUP BY branches.id HAVING COUNT(employee.id) < 10
